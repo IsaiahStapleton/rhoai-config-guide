@@ -26,23 +26,51 @@ Observability:
 
 ### 1.1 Install the Node Feature Discovery (NFD) Operator 
 
+***The NFD Operator is used to detect and label nodes based on their hardware capabilities. This is important that we can properly schedule AI workloads or deploy models on GPU nodes.***
+
 Apply the Namespace, OperatorGroup, and Subscription object
 
 `oc apply -f manifests/01/nfd-operator.yaml`
 
+Verify the operator is installed and running before moving on to the next step.
 
-### 1.2 Install the NVIDIA GPU Operator 
+`oc get pods -n openshift-nfd -w`
+
+### 1.2 Apply the NFD Instance Object 
+
+***After installing the NFD Operator, you must apply an NFD instance object to deploy the NFD DaemonSet, which scans nodes for hardware features and labels them accordingly.*** 
+
+`oc apply -f manifests/01/nfd-instance.yaml`
+
+### 1.3 Install the NVIDIA GPU Operator 
+
+***The NVIDIA GPU Operator is essential for RHOAI since it is used to automate the deployment of GPU drivers, CUDA libraries, and other dependencies required for AI workloads and model serving.***
 
 Apply the Namespace, OperatorGroup, and Subscription object
 
 `oc apply -f manifests/01/nvidia-gpu-operator.yaml`
 
+Verify the operator is installed and running before moving on to the next step.
 
-*** TODO: Instructions for Creating clusterpolicy 
+### 1.4 Apply NVIDIA GPU ClusterPolicy 
+
+***The NVIDIA GPU Operator itself only installs the operator framework, but doesn't automaticaly deploy the necessary components. We need to apply the ClusterPolicy as that is what enables and configures GPU support within the cluster.***
+
+Create the ClusterPolicy
+
+`oc get csv -n nvidia-gpu-operator -l operators.coreos.com/gpu-operator-certified.nvidia-gpu-operator -ojsonpath='{.items[0].metadata.annotations.alm-examples}' | jq '.[0]' > scratch/nvidia-gpu-clusterpolicy.json`
+
+Apply the ClusterPolicy
+
+`oc apply -f scratch/nvidia-gpu-clusterpolicy.json`
 
 ## 2. Install RHOAI Kserve Dependencies
 
+***KServe provides scalable and efficient model serving capabilities, enabling deployment, inference, and monitoring of AI models within OpenShift.***
+
 ### 2.1 Install the OpenShift Service Mesh Operator
+
+***The OpenShift Service Mesh Operator is required for KServe because KServe relies on Istio for managing communication between model serving components***
 
 Apply the Subscription object to install the operator
 
@@ -50,9 +78,13 @@ Apply the Subscription object to install the operator
 
 ### 2.2 Install the Red Hat OpenShift Serverless Operator
 
+***The Red Hat OpenShift Serverless Operator is required because it provides Knative Serving, which enables serverless capabilities that assist in model deployment.***
+
 `oc apply -f manifests/02/serverless-operator.yaml`
 
 ### 2.2 Install the Red Hat Authorino Operator
+
+***The Red Hat Authorino Operator is required because it provides authentication for API requests, ensuring secure access to AI model endpoints.***
 
 `oc apply -f manifests/02/authorino-subscription.yaml`
 
@@ -69,5 +101,3 @@ Wait for the RHOAI operator to be installed before proceeding with this step. (*
 
 `oc apply -f manifests/03/rhoai-operator-dsc.yaml`
 
-
-***TODO: Provide context/explanation for each step***
