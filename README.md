@@ -11,6 +11,13 @@ My environment at time of demo:
 - RHOAI {version}
 - Other Operator versions
 
+Required Operators:
+- ***Node Feature Discovery (NFD) Operator:*** Detects and labels nodes based on hardware capabilities for proper AI workload scheduling.
+- ***NVIDIA GPU Operator:*** Automates deployment of GPU drivers, CUDA libraries, and dependencies for AI workloads.
+- ***OpenShift Service Mesh Operator:*** Provides Istio for managing secure communication between model-serving components.
+- ***Red Hat OpenShift Serverless Operator:*** Provides Knative Serving for scalable and event-driven AI model deployment.
+- ***Red Hat Authorino Operator:*** Provides authentication and authorization for secure access to AI model endpoints.
+- ***Red Hat OpenShift AI Operator:*** Manages and deploys AI components and services within OpenShift.
 
 Environment used for:
 - Deploying the ***Granite model*** on RHOAI, using ***A100 NVIDIA GPU*** {other specs}, served using ***vLLM ServingRuntime for KServe***
