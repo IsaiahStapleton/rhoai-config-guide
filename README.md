@@ -67,7 +67,7 @@ Apply the Namespace, OperatorGroup, and Subscription object
 
 Wait for the RHOAI operator to be installed before proceeding with this step. (***Provide steps for checking***)
 
-`oc apply -f manifests/03-rhoai/rhoai-operator-dsc.yaml`
+`oc apply -f manifests/03/rhoai-operator-dsc.yaml`
 
 
 ***TODO: Provide context/explanation for each step***
