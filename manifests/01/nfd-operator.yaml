@@ -11,11 +11,11 @@ metadata:
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: gpu-operator-certified
-  namespace: nvidia-gpu-operator
+  name: nfd
+  namespace: openshift-nfd
 spec:
   targetNamespaces:
-    - nvidia-gpu-operator
+    - openshift-nfd
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
