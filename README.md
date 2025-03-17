@@ -6,11 +6,6 @@ The purpose of this guide is to offer the simplest steps for configuring Red Hat
 RHOAI does not come properly configured for GPU use and model deployment out of the box after installing the operator.
 This guide will give you the steps needed to do so, as well as offer insight into why each step is necessary for model deployment. This guide focuses on preparing for deploying models using the vLLM ServingRuntime for KServe.
 
-My environment at time of demo:
-- Openshift {4.18.1}
-- RHOAI {version}
-- Other Operator versions
-
 Required Operators:
 - ***Node Feature Discovery (NFD) Operator:*** Detects and labels nodes based on hardware capabilities for proper AI workload scheduling.
 - ***NVIDIA GPU Operator:*** Automates deployment of GPU drivers, CUDA libraries, and dependencies for AI workloads.
@@ -20,14 +15,9 @@ Required Operators:
 - ***Red Hat OpenShift AI Operator:*** Manages and deploys AI components and services within OpenShift.
 
 Environment used for:
-- Deploying the ***Granite model*** on RHOAI, using ***A100 NVIDIA GPU*** {other specs}, served using ***vLLM ServingRuntime for KServe***
+- Deploying the ***Granite model*** on RHOAI, using ***A100 NVIDIA GPU***, served using ***vLLM ServingRuntime for KServe***
 - Gathering metrics and doing benchmarking on the deployed granite models 
 
-Observability:
-- Prometheus: To gather metrics 
-- Grafana: To visualize metrics
-- NVIDIA DCGM: Export metrics related to GPU (Temperature, Utilization, etc.)
-- vLLM Serving Runtime: Exporter metrics related to model performance (Throughput, Latency, Time to First Token, etc.)
 
 ## 1. Enabling GPU Support
 
@@ -71,7 +61,7 @@ Apply the ClusterPolicy
 
 `oc apply -f scratch/nvidia-gpu-clusterpolicy.json`
 
-## 2. Install RHOAI Kserve Dependencies
+## 2. Install RHOAI KServe Dependencies
 
 ***KServe provides scalable and efficient model serving capabilities, enabling deployment, inference, and monitoring of AI models within OpenShift.***
 
