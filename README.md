@@ -61,6 +61,22 @@ Apply the ClusterPolicy
 
 `oc apply -f scratch/nvidia-gpu-clusterpolicy.json`
 
+### 1.5 (OPTIONAL) Running a Sample GPU Workload
+
+In order to test if GPU support is now enabled correctly in your cluster, we can run a simple GPU workload. 
+
+Create new namespace to run GPU workload
+
+`oc project sandbox || oc new-project sandbox`
+
+Create and run the GPU workload
+
+`oc apply -f manifests/01/nvidia-gpu-sample-app.yaml`
+
+Check the logs to see the output of the workload
+
+`oc logs cuda-vectoradd`
+
 ## 2. Install RHOAI KServe Dependencies
 
 ***KServe provides scalable and efficient model serving capabilities, enabling deployment, inference, and monitoring of AI models within OpenShift.***
