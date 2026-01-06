@@ -1,4 +1,8 @@
-# Guide to Configuring RHOAI for Model Deployment
+# 🛠️ Guide to Configuring RHOAI for Model Deployment
+
+[![OpenShift Ready](https://img.shields.io/badge/OpenShift-Ready-brightgreen)](https://www.openshift.com)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
 
 ## Purpose
 
@@ -152,3 +156,10 @@ Wait for the RHOAI operator to be installed before proceeding with this step. (*
 oc apply -f manifests/03/rhoai-operator-dsc.yaml
 ```
 
+## 🤝 Contributing
+
+Feel free to submit issues, pull requests, or suggest new features.
+
+## ⚡ License
+
+This repository is licensed under the MIT License. See LICENSE for details.
