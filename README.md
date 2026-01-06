@@ -65,10 +65,14 @@ Verify the operator is installed and running before moving on to the next step.
 
 ***The NVIDIA GPU Operator itself only installs the operator framework, but doesn't automaticaly deploy the necessary components. We need to apply the ClusterPolicy as that is what enables and configures GPU support within the cluster.***
 
-Create the ClusterPolicy
+Create the ClusterPolicy. Following command lets you retrieve example ClusterPolicy from installed operator.
 
 ```bash
-oc get csv -n nvidia-gpu-operator -l operators.coreos.com/gpu-operator-certified.nvidia-gpu-operator -ojsonpath='{.items[0].metadata.annotations.alm-examples}' | jq '.[0]' > scratch/nvidia-gpu-clusterpolicy.json
+oc get csv \
+ -n nvidia-gpu-operator \
+ -l operators.coreos.com/gpu-operator-certified.nvidia-gpu-operator \
+ -ojsonpath='{.items[0].metadata.annotations.alm-examples}' | \
+jq '.[0]' > scratch/nvidia-gpu-clusterpolicy.json
 ```
 
 Apply the ClusterPolicy
@@ -155,6 +159,13 @@ Wait for the RHOAI operator to be installed before proceeding with this step. (*
 ```bash
 oc apply -f manifests/03/rhoai-operator-dsc.yaml
 ```
+Once operator becomes ready you will see new option available at the upper right menu. See the screenshot below.
+
+![alt text](./img/1.png)
+
+After successfull login you can start working with RHOAI web interface.
+
+![alt text](./img/2.png)
 
 ## 🤝 Contributing
 
