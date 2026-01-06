@@ -97,14 +97,14 @@ oc logs cuda-vectoradd
 
 If your GPU enabled nodes are configured correctly you shoud see an output as follows:
 
-`
+```
 [Vector addition of 50000 elements]
 Copy input data from the host memory to the CUDA device
 CUDA kernel launch with 196 blocks of 256 threads
 Copy output data from the CUDA device to the host memory
 Test PASSED
 Done
-`
+```
 
 ## 2. Install RHOAI KServe Dependencies
 
