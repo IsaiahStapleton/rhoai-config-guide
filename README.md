@@ -1,4 +1,8 @@
-# Guide to Configuring RHOAI for Model Deployment
+# 🛠️ Guide to Configuring RHOAI for Model Deployment
+
+[![OpenShift Ready](https://img.shields.io/badge/OpenShift-Ready-brightgreen)](https://www.openshift.com)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
 
 ## Purpose
 
@@ -27,17 +31,23 @@ Environment used for:
 
 Apply the Namespace, OperatorGroup, and Subscription object
 
-`oc apply -f manifests/01/nfd-operator.yaml`
+```bash
+oc apply -f manifests/01/nfd-operator.yaml
+```
 
 Verify the operator is installed and running before moving on to the next step.
 
-`oc get pods -n openshift-nfd -w`
+```bash
+oc get pods -n openshift-nfd -w
+```
 
 ### 1.2 Apply the NFD Instance Object 
 
 ***After installing the NFD Operator, you must apply an NFD instance object to deploy the NFD DaemonSet, which scans nodes for hardware features and labels them accordingly.*** 
 
-`oc apply -f manifests/01/nfd-instance.yaml`
+```bash
+oc apply -f manifests/01/nfd-instance.yaml
+```
 
 ### 1.3 Install the NVIDIA GPU Operator 
 
@@ -45,7 +55,9 @@ Verify the operator is installed and running before moving on to the next step.
 
 Apply the Namespace, OperatorGroup, and Subscription object
 
-`oc apply -f manifests/01/nvidia-gpu-operator.yaml`
+```bash
+oc apply -f manifests/01/nvidia-gpu-operator.yaml
+```
 
 Verify the operator is installed and running before moving on to the next step.
 
@@ -53,13 +65,21 @@ Verify the operator is installed and running before moving on to the next step.
 
 ***The NVIDIA GPU Operator itself only installs the operator framework, but doesn't automaticaly deploy the necessary components. We need to apply the ClusterPolicy as that is what enables and configures GPU support within the cluster.***
 
-Create the ClusterPolicy
+Create the ClusterPolicy. Following command lets you retrieve example ClusterPolicy from installed operator.
 
-`oc get csv -n nvidia-gpu-operator -l operators.coreos.com/gpu-operator-certified.nvidia-gpu-operator -ojsonpath='{.items[0].metadata.annotations.alm-examples}' | jq '.[0]' > scratch/nvidia-gpu-clusterpolicy.json`
+```bash
+oc get csv \
+ -n nvidia-gpu-operator \
+ -l operators.coreos.com/gpu-operator-certified.nvidia-gpu-operator \
+ -ojsonpath='{.items[0].metadata.annotations.alm-examples}' | \
+jq '.[0]' > scratch/nvidia-gpu-clusterpolicy.json
+```
 
 Apply the ClusterPolicy
 
-`oc apply -f scratch/nvidia-gpu-clusterpolicy.json`
+```bash
+oc apply -f scratch/nvidia-gpu-clusterpolicy.json
+```
 
 ### 1.5 (OPTIONAL) Running a Sample GPU Workload
 
@@ -67,15 +87,32 @@ In order to test if GPU support is now enabled correctly in your cluster, we can
 
 Create new namespace to run GPU workload
 
-`oc project sandbox || oc new-project sandbox`
+```bash
+oc project sandbox || oc new-project sandbox
+```
 
 Create and run the GPU workload
 
-`oc apply -f manifests/01/nvidia-gpu-sample-app.yaml`
+```bash
+oc apply -f manifests/01/nvidia-gpu-sample-app.yaml
+```
 
 Check the logs to see the output of the workload
 
-`oc logs cuda-vectoradd`
+```bash
+oc logs cuda-vectoradd
+```
+
+If your GPU enabled nodes are configured correctly you shoud see an output as follows:
+
+```
+[Vector addition of 50000 elements]
+Copy input data from the host memory to the CUDA device
+CUDA kernel launch with 196 blocks of 256 threads
+Copy output data from the CUDA device to the host memory
+Test PASSED
+Done
+```
 
 ## 2. Install RHOAI KServe Dependencies
 
@@ -87,30 +124,53 @@ Check the logs to see the output of the workload
 
 Apply the Subscription object to install the operator
 
-`oc apply -f manifests/02/servicemesh-subscription.yaml`
+```bash
+oc apply -f manifests/02/servicemesh-subscription.yaml
+```
 
 ### 2.2 Install the Red Hat OpenShift Serverless Operator
 
 ***The Red Hat OpenShift Serverless Operator is required because it provides Knative Serving, which enables serverless capabilities that assist in model deployment.***
 
-`oc apply -f manifests/02/serverless-operator.yaml`
+```bash
+oc apply -f manifests/02/serverless-operator.yaml
+```
 
 ### 2.2 Install the Red Hat Authorino Operator
 
 ***The Red Hat Authorino Operator is required because it provides authentication for API requests, ensuring secure access to AI model endpoints.***
 
-`oc apply -f manifests/02/authorino-subscription.yaml`
+```bash
+oc apply -f manifests/02/authorino-subscription.yaml
+```
 
 ## 3. Install the Red Hat OpenShift AI Operator
 
 Apply the Namespace, OperatorGroup, and Subscription object
 
-`oc apply -f manifests/03/rhoai-operator.yaml`
-
+```bash
+oc apply -f manifests/03/rhoai-operator.yaml
+```
 
 ### 3.1 Install RHOAI Components
 
 Wait for the RHOAI operator to be installed before proceeding with this step. (***Provide steps for checking***)
 
-`oc apply -f manifests/03/rhoai-operator-dsc.yaml`
+```bash
+oc apply -f manifests/03/rhoai-operator-dsc.yaml
+```
+Once operator becomes ready you will see new option available at the upper right menu. See the screenshot below.
 
+![alt text](./img/1.png)
+
+After successfull login you can start working with RHOAI web interface.
+
+![alt text](./img/2.png)
+
+## 🤝 Contributing
+
+Feel free to submit issues, pull requests, or suggest new features.
+
+## ⚡ License
+
+This repository is licensed under the MIT License. See LICENSE for details.
