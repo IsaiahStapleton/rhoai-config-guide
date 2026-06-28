@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maas-postgresql
+  namespace: redhat-ods-applications
+  labels:
+    app: maas-postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maas-postgresql
+  template:
+    metadata:
+      labels:
+        app: maas-postgresql
+    spec:
+      containers:
+      - name: postgresql
+        image: registry.redhat.io/rhel9/postgresql-16:latest
+        envFrom:
+        - secretRef:
+            name: maas-postgresql-credentials
+        ports:
+        - containerPort: 5432
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/pgsql/data
+        - name: init-script
+          mountPath: /usr/share/container-scripts/postgresql/start/init-registry-db.sh
+          subPath: init-registry-db.sh
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: maas-postgresql-pvc
+      - name: init-script
+        configMap:
+          name: postgres-init-config
+          defaultMode: 0755

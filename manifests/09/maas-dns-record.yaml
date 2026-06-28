@@ -1,0 +1,18 @@
+# This manifest is cluster-specific: substitute APPS_DOMAIN and MAAS_ELB before applying.
+# Use the dynamic command in CLAUDE.md / README.md instead of applying this file directly.
+#
+# APPS_DOMAIN: oc get ingresses.config cluster -o jsonpath='{.spec.domain}'
+# MAAS_ELB:   oc get svc maas-default-gateway-maas-gateway-class -n openshift-ingress \
+#               -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+apiVersion: ingress.operator.openshift.io/v1
+kind: DNSRecord
+metadata:
+  name: maas-api-dns
+  namespace: openshift-ingress-operator
+spec:
+  dnsManagementPolicy: Managed
+  dnsName: "maas.<APPS_DOMAIN>."
+  recordTTL: 30
+  recordType: CNAME
+  targets:
+    - <MAAS_ELB>

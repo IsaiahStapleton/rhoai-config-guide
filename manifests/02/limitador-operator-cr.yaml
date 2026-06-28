@@ -1,0 +1,5 @@
+apiVersion: limitador.kuadrant.io/v1alpha1
+kind: LimitadorOperator
+metadata:
+  name: limitador
+spec: {}

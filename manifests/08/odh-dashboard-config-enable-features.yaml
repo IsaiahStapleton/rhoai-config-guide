@@ -1,0 +1,6 @@
+spec:
+  dashboardConfig:
+    trainingJobs: true
+    llmGatewayField: true
+    mcpCatalog: true
+    promptManagement: true

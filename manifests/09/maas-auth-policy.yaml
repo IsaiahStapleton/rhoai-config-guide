@@ -1,0 +1,12 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSAuthPolicy
+metadata:
+  name: qwen25-3b-instruct-authpolicy
+  namespace: models-as-a-service
+spec:
+  modelRefs:
+    - name: qwen25-3b-instruct
+      namespace: dybbol
+  subjects:
+    groups:
+      - name: "system:authenticated"  # all logged-in cluster users; scope down to a specific group if needed

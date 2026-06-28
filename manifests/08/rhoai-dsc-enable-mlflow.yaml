@@ -1,0 +1,4 @@
+spec:
+  components:
+    mlflowoperator:
+      managementState: Managed

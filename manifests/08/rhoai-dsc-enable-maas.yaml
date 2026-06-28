@@ -1,0 +1,5 @@
+spec:
+  components:
+    kserve:
+      modelsAsService:
+        managementState: Managed

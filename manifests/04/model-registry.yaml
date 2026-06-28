@@ -1,15 +1,17 @@
-# model-registry.yaml
-apiVersion: modelregistry.opendatahub.io/v1alpha1
+apiVersion: modelregistry.opendatahub.io/v1beta1
 kind: ModelRegistry
 metadata:
   name: local-model-registry
   namespace: rhoai-model-registries
 spec:
-  mysql:
-    host: mysql   # just the hostname since it's in the same namespace
-    port: 3306
+  postgres:
+    # Cross-namespace connection: PostgreSQL runs in redhat-ods-applications,
+    # the Model Registry CR lives in rhoai-model-registries.
+    host: maas-postgresql.redhat-ods-applications.svc.cluster.local
+    port: 5432
     database: registry
     username: registry
     passwordSecret:
-      name: mysql-credentials
-      key: MYSQL_PASSWORD
+      name: registry-postgresql-credentials
+      key: POSTGRESQL_PASSWORD
+    skipDBCreation: true

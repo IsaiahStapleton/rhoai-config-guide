@@ -1,0 +1,20 @@
+apiVersion: mlflow.opendatahub.io/v1
+kind: MLflow
+metadata:
+  name: mlflow
+spec:
+  # SQLite backend — persistent via PVC below; no external DB needed
+  backendStoreUri: "sqlite:////mlflow/mlflow.db"
+  # Serve artifacts from the MLflow server itself — no S3/GCS bucket required
+  serveArtifacts: true
+  # PVC for SQLite DB and artifact storage
+  storage:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+  # Expose all RHOAI data science project namespaces as MLflow workspaces
+  workspaceLabelSelector:
+    matchLabels:
+      opendatahub.io/dashboard: "true"

@@ -1,0 +1,9 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSModelRef
+metadata:
+  name: qwen25-3b-instruct
+  namespace: dybbol
+spec:
+  modelRef:
+    kind: LLMInferenceService
+    name: qwen25-3b-instruct

@@ -1,0 +1,18 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSSubscription
+metadata:
+  name: qwen25-3b-instruct-subscription
+  namespace: models-as-a-service
+spec:
+  priority: 1
+  owner:
+    groups:
+      - name: "system:authenticated"  # all logged-in cluster users; scope down to a specific group if needed
+  modelRefs:
+    - name: qwen25-3b-instruct
+      namespace: dybbol
+      billingRate:
+        perToken: "0"
+      tokenRateLimits:
+        - limit: 1000000
+          window: 24h

@@ -1,0 +1,27 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: openshift-ai-inference
+spec:
+  controllerName: openshift.io/gateway-controller/v1
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: openshift-ai-inference
+  namespace: openshift-ingress
+spec:
+  gatewayClassName: openshift-ai-inference
+  listeners:
+  - name: https
+    port: 443
+    protocol: HTTPS
+    allowedRoutes:
+      namespaces:
+        from: All
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: data-science-gateway-service-tls
+        namespace: openshift-ingress

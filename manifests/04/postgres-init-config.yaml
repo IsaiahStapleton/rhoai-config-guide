@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-config
+  namespace: redhat-ods-applications
+data:
+  init-registry-db.sh: |
+    #!/bin/bash
+    # Creates the 'registry' role and database for the RHOAI Model Registry.
+    # Runs on first PostgreSQL initialization via /usr/share/container-scripts/postgresql/start/.
+    # Idempotent: safe if the role or database already exist.
+    psql <<-'EOSQL'
+        DO $$
+        BEGIN
+            CREATE ROLE registry WITH LOGIN PASSWORD 'registry';
+        EXCEPTION WHEN duplicate_object THEN
+            NULL;
+        END
+        $$;
+        SELECT 'CREATE DATABASE registry OWNER registry'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'registry')\gexec
+        GRANT ALL PRIVILEGES ON DATABASE registry TO registry;
+    EOSQL

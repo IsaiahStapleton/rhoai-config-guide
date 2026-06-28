@@ -28,7 +28,7 @@ metadata:
   name: job-set
   namespace: openshift-jobset-operator
 spec:
-  channel: stable
+  channel: stable-v1.0
   installPlanApproval: Automatic
   name: job-set
   source: redhat-operators

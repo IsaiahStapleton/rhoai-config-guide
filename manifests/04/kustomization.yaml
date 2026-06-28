@@ -1,7 +1,7 @@
 resources:
- - mysql-configmap.yaml
- - mysql-secret.yaml
- - mysql-pvc.yaml
- - mysql-deployment.yaml
- - mysql-service.yaml
- - model-registry.yaml
+  - postgres-credentials.yaml
+  - postgres-init-config.yaml
+  - postgres-pvc.yaml
+  - postgres-deployment.yaml
+  - postgres-service.yaml
+  - model-registry.yaml

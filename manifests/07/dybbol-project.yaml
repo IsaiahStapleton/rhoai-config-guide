@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dybbol
+  annotations:
+    openshift.io/display-name: dybbol
+  labels:
+    kubernetes.io/metadata.name: dybbol
+    opendatahub.io/dashboard: "true"
+    modelmesh-enabled: "false"

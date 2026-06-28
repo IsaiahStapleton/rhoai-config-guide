@@ -1,0 +1,51 @@
+apiVersion: serving.kserve.io/v1alpha2
+kind: LLMInferenceService
+metadata:
+  name: qwen25-3b-instruct
+  namespace: dybbol
+  annotations:
+    opendatahub.io/hardware-profile-name: gpu-profile
+    opendatahub.io/hardware-profile-namespace: redhat-ods-applications
+    opendatahub.io/model-type: generative
+    openshift.io/description: qwen 2.5 3b instruct
+    openshift.io/display-name: Qwen/Qwen2.5-3B-Instruct
+    security.opendatahub.io/enable-auth: "false"
+  labels:
+    opendatahub.io/dashboard: "true"
+    opendatahub.io/genai-asset: "true"
+spec:
+  model:
+    name: qwen25-3b-instruct
+    uri: hf://Qwen/Qwen2.5-3B-Instruct
+  replicas: 1
+  router:
+    gateway:
+      refs:
+        - name: maas-default-gateway
+          namespace: openshift-ingress
+    route: {}
+    scheduler: {}
+  template:
+    containers:
+    - name: main
+      envFrom:
+        - secretRef:
+            name: huggingface-token
+      env:
+        - name: HF_HOME
+          value: /tmp/hf_home
+      args:
+        - --gpu-memory-utilization=0.85
+        - --max-model-len=32768
+        - --enforce-eager
+        - --enable-auto-tool-choice
+        - --tool-call-parser hermes
+      resources:
+        limits:
+          cpu: "1"
+          memory: 12Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "1"
+          memory: 12Gi
+          nvidia.com/gpu: "1"

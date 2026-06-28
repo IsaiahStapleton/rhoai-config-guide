@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: maas-db-config
+  namespace: redhat-ods-applications
+type: Opaque
+stringData:
+  DB_CONNECTION_URL: "postgresql://maas:maasdb123@maas-postgresql.redhat-ods-applications.svc.cluster.local:5432/maasdb?sslmode=disable"

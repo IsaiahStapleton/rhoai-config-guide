@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gen-ai-aa-mcp-servers
+  namespace: redhat-ods-applications
+data:
+  Fetch: |
+    {
+      "url": "https://remote.mcpservers.org/fetch",
+      "description": "Fetch web content and convert HTML to markdown. Use for web browsing and reading URLs."
+    }
+  Sequential-Thinking: |
+    {
+      "url": "https://remote.mcpservers.org/sequentialthinking",
+      "description": "Structured problem-solving through a dynamic, reflective thinking process."
+    }
+  Weather: |
+    {
+      "url": "https://jiri-spilka--weather-mcp-server.apify.actor/mcp",
+      "description": "Get real-time weather data for any location. Requires an Apify API token (enter via Configure)."
+    }
+  Postgres-Airman: |
+    {
+      "url": "http://pg-airman-mcp.dybbol.svc.cluster.local:8000/mcp",
+      "description": "PostgreSQL tools for the in-cluster maasdb database: schema inspection, query plans, index tuning, health checks, and safe read-only SQL execution."
+    }

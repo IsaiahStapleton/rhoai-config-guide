@@ -1,0 +1,75 @@
+---
+# Secret pg-airman-mcp-db is NOT included here — create it imperatively before applying:
+#
+#   MAAS_PW=$(oc get secret maas-postgresql-credentials -n redhat-ods-applications \
+#     -o jsonpath='{.data.POSTGRESQL_PASSWORD}' | base64 -d)
+#   oc create secret generic pg-airman-mcp-db -n dybbol \
+#     --from-literal=AIRMAN_MCP_DATABASE_URL="postgresql://maas:${MAAS_PW}@maas-postgresql.redhat-ods-applications.svc.cluster.local:5432/maasdb?sslmode=disable"
+#
+# This mirrors maas-db-config (redhat-ods-applications) but lives in dybbol
+# so the Pod can reference it via secretKeyRef (cross-namespace refs are not allowed).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-airman-mcp
+  namespace: dybbol
+  labels:
+    app: pg-airman-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-airman-mcp
+  template:
+    metadata:
+      labels:
+        app: pg-airman-mcp
+    spec:
+      containers:
+        - name: pg-airman-mcp
+          image: docker.io/enterprisedb/pg-airman-mcp:latest
+          args:
+            - --transport=streamable-http
+            - --streamable-http-port=8000
+            - --access-mode=restricted
+          # The entrypoint script auto-adds --streamable-http-host=0.0.0.0.
+          # Port is pinned to 8000 explicitly; without it the entrypoint defaults to 8080.
+          env:
+            - name: AIRMAN_MCP_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pg-airman-mcp-db
+                  key: AIRMAN_MCP_DATABASE_URL
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-airman-mcp
+  namespace: dybbol
+  labels:
+    app: pg-airman-mcp
+spec:
+  selector:
+    app: pg-airman-mcp
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
